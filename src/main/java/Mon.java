@@ -8,12 +8,13 @@ public class Mon {
     private static final String TASK_COUNT_SUFFIX = " tasks in the list.";
     private static final String MARKED_DONE_MESSAGE = "Nice! I've marked this task as done:";
     private static final String MARKED_NOT_DONE_MESSAGE = "OK, I've marked this task as not done yet:";
-    
+    private static final String TASK_DELETED_MESSAGE = "Noted. I've removed this task:";
+
     private static final ArrayList<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) {
         System.out.println(INDENT + "Hello I'm Mon. What can I do for you?");
-        
+
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -23,7 +24,7 @@ public class Mon {
                 handleInput(input);
             }
         }
-        
+
         // Clean up and print goodbye message
         scanner.close();
         System.out.println(INDENT + "Mon: See you again!");
@@ -54,6 +55,9 @@ public class Mon {
                 case "event":
                     handleEventCommand(input);
                     break;
+                case "delete":
+                    handleDeleteCommand(parts);
+                    break;
                 default:
                     throw MonException.unknownCommandException();
             }
@@ -78,7 +82,7 @@ public class Mon {
         int taskNumber = Integer.parseInt(parts[1]);
 
         if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw MonException.markOutOfBoundsException();
+            throw MonException.taskOutOfBoundsException();
         }
 
         // Mark the task as done and print
@@ -95,7 +99,7 @@ public class Mon {
         int taskNumber = Integer.parseInt(parts[1]);
 
         if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw MonException.markOutOfBoundsException();
+            throw MonException.taskOutOfBoundsException();
         }
 
         // Mark the task as not done and print
@@ -109,7 +113,7 @@ public class Mon {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw MonException.todoException();
         }
-        
+
         // Add the task and print
         tasks.add(new Todo(parts[1]));
         System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
@@ -122,13 +126,13 @@ public class Mon {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw MonException.deadlineException();
         }
-        
+
         // Split the rest to get the task name and deadline
         String[] deadlineParts = parts[1].split(" /by ");
         if (deadlineParts.length < 2) {
             throw MonException.deadlineException();
         }
-        
+
         // Add the task and print
         tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
         System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
@@ -161,6 +165,25 @@ public class Mon {
         // Add and print
         tasks.add(new Event(eventName, eventStartTime, eventEndTime));
         System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
+    }
+
+    public static void handleDeleteCommand(String[] parts) throws MonException {
+        // Split the input to remove the command prefix
+        if (parts.length < 2) {
+            throw MonException.unknownCommandException();
+        }
+
+        // Parse the task number from the command
+        int taskNumber = Integer.parseInt(parts[1]);
+
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw MonException.taskOutOfBoundsException();
+        }
+
+        // Remove the task and print
+        Task removedTask = tasks.remove(taskNumber - 1);
+        System.out.println(INDENT + TASK_DELETED_MESSAGE + "\n" + INDENT + removedTask.toString());
         System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
 }

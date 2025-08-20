@@ -44,10 +44,17 @@ public class MonException extends Exception {
         );
     }
 
-    public static MonException markOutOfBoundsException() {
+    public static MonException taskOutOfBoundsException() {
         return new MonException(
             "Task number is out of bounds!" + NEWLINE +
             INDENT + "Please provide a valid task number."
+        );
+    }
+
+    public static MonException deleteException() {
+        return new MonException(
+            "Unknown format for delete command!" + NEWLINE +
+            INDENT + "Expected format: delete <task_number>"
         );
     }
 
