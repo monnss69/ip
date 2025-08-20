@@ -69,19 +69,35 @@ public class Mon {
         }
     }
 
-    private static void handleMarkCommand(String[] parts) {
+    private static void handleMarkCommand(String[] parts) throws MonException {
+        if (parts.length < 2) {
+            throw MonException.markException();
+        }
+
         // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
-        
+
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw MonException.markOutOfBoundsException();
+        }
+
         // Mark the task as done and print
         tasks.get(taskNumber - 1).setStatus(true);
         System.out.println(INDENT + MARKED_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());
     }
 
-    private static void handleUnmarkCommand(String[] parts) {
+    private static void handleUnmarkCommand(String[] parts) throws MonException {
+        if (parts.length < 2) {
+            throw MonException.markException();
+        }
+
         // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
-        
+
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw MonException.markOutOfBoundsException();
+        }
+
         // Mark the task as not done and print
         tasks.get(taskNumber - 1).setStatus(false);
         System.out.println(INDENT + MARKED_NOT_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());

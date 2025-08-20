@@ -37,6 +37,20 @@ public class MonException extends Exception {
         );
     }
 
+    public static MonException markException() {
+        return new MonException(
+            "Unknown format for mark/unmark command!" + NEWLINE +
+            INDENT + "Expected format: mark <task_number> or unmark <task_number>"
+        );
+    }
+
+    public static MonException markOutOfBoundsException() {
+        return new MonException(
+            "Task number is out of bounds!" + NEWLINE +
+            INDENT + "Please provide a valid task number."
+        );
+    }
+
     @Override
     public String getMessage() {
         return message;
