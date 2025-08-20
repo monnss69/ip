@@ -6,8 +6,8 @@ public class Mon {
 
     public static void main(String[] args) {
         System.out.println("    Hello I'm Mon. What can I do for you?");
-        while (true) {
-            Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("bye")) {
                 break;
@@ -15,6 +15,7 @@ public class Mon {
                 handleInput(input);
             }
         }
+        scanner.close();
         System.out.println("    Mon: See you again!");
     }
 
