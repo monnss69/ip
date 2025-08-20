@@ -2,10 +2,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Mon {
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static final String INDENT = "    ";
+    private static final String TASK_ADDED_MESSAGE = "Got it. I've added this task:";
+    private static final String TASK_COUNT_PREFIX = "Now you have ";
+    private static final String TASK_COUNT_SUFFIX = " tasks in the list.";
+    private static final String MARKED_DONE_MESSAGE = "Nice! I've marked this task as done:";
+    private static final String MARKED_NOT_DONE_MESSAGE = "OK, I've marked this task as not done yet:";
+    
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println("    Hello I'm Mon. What can I do for you?");
+        System.out.println(INDENT + "Hello I'm Mon. What can I do for you?");
+        
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -15,11 +23,14 @@ public class Mon {
                 handleInput(input);
             }
         }
+        
+        // Clean up and print goodbye message
         scanner.close();
-        System.out.println("    Mon: See you again!");
+        System.out.println(INDENT + "Mon: See you again!");
     }
 
     private static void handleInput(String input) {
+        // Parse the command from the input
         String[] parts = input.split(" ");
         String command = parts[0].toLowerCase();
 
@@ -44,76 +55,96 @@ public class Mon {
                     handleEventCommand(input);
                     break;
                 default:
-                    break;
+                    throw MonException.unknownCommandException();
             }
         } catch (MonException e) {
+            // Print any error messages with proper indentation
             System.out.println("    " + e.getMessage());
         }
     }
 
     private static void handleListCommand() {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("    " + (i + 1) + ". " + tasks.get(i).toString());
+            System.out.println(INDENT + (i + 1) + ". " + tasks.get(i).toString());
         }
     }
 
     private static void handleMarkCommand(String[] parts) {
+        // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
+        
+        // Mark the task as done and print
         tasks.get(taskNumber - 1).setStatus(true);
-        System.out
-                .println("    Nice! I've marked this task as done:\n" + "    " + tasks.get(taskNumber - 1).toString());
+        System.out.println(INDENT + MARKED_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());
     }
 
     private static void handleUnmarkCommand(String[] parts) {
+        // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
+        
+        // Mark the task as not done and print
         tasks.get(taskNumber - 1).setStatus(false);
-        System.out.println(
-                "    OK, I've marked this task as not done yet:\n" + "    " + tasks.get(taskNumber - 1).toString());
+        System.out.println(INDENT + MARKED_NOT_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());
     }
 
     private static void handleTodoCommand(String input) throws MonException {
+        // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw MonException.TodoException();
+            throw MonException.todoException();
         }
+        
+        // Add the task and print
         tasks.add(new Todo(parts[1]));
-        System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
-        System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
 
     private static void handleDeadlineCommand(String input) throws MonException {
+        // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw MonException.DeadlineException();
+            throw MonException.deadlineException();
         }
+        
+        // Split the rest to get the task name and deadline
         String[] deadlineParts = parts[1].split(" /by ");
         if (deadlineParts.length < 2) {
-            throw MonException.DeadlineException();
+            throw MonException.deadlineException();
         }
+        
+        // Add the task and print
         tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
-        System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
-        System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
 
     private static void handleEventCommand(String input) throws MonException {
+        // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw MonException.EventException();
+            throw MonException.eventException();
         }
+
+        // Split the rest to get the task name
         String[] eventParts = parts[1].split(" /from ", 2);
         if (eventParts.length < 2) {
-            throw MonException.EventException();
+            throw MonException.eventException();
         }
         String eventName = eventParts[0];
 
+        // Split again to get the event time
         String[] eventTimeParts = eventParts[1].split(" /to ");
         if (eventTimeParts.length < 2) {
-            throw MonException.EventException();
+            throw MonException.eventException();
         }
+
         String eventStartTime = eventTimeParts[0];
         String eventEndTime = eventTimeParts[1];
+
+        // Add and print
         tasks.add(new Event(eventName, eventStartTime, eventEndTime));
-        System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
-        System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
 }

@@ -1,25 +1,40 @@
 public class MonException extends Exception {
-    private String message;
+    private static final String NEWLINE = "\n";
+    private static final String INDENT = "    ";
+    
+    private final String message;
 
     public MonException(String message) {
         super(message);
         this.message = message;
     }
 
-    public static MonException TodoException() {
-        return new MonException("Invalid format for Todo command. The expected command is Todo <task_description>");
+    public static MonException todoException() {
+        return new MonException(
+            "Unknown format for todo command!" + NEWLINE +
+            INDENT + "Expected format: todo <task_description>"
+        );
     }
 
-    public static MonException DeadlineException() {
-        return new MonException("Invalid format for Deadline command. The expected command is Deadline <task_description> /by <date>");
+    public static MonException deadlineException() {
+        return new MonException(
+            "Unknown format for deadline command!" + NEWLINE +
+            INDENT + "Expected format: deadline <task_description> /by <date>"
+        );
     }
 
-    public static MonException EventException() {
-        return new MonException("Invalid format for Event command. The expected command is Event <task_description> /at <start_time> to <end_time>");
+    public static MonException eventException() {
+        return new MonException(
+            "Unknown format for event command!" + NEWLINE +
+            INDENT + "Expected format: event <task_description> /from <start_time> /to <end_time>"
+        );
     }
 
-    public static MonException UnknownCommandException() {
-        return new MonException("Unknown command. Please try again.");
+    public static MonException unknownCommandException() {
+        return new MonException(
+            "Unknown command!" + NEWLINE +
+            INDENT + "Please try again."
+        );
     }
 
     @Override
