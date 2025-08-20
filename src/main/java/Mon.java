@@ -23,27 +23,31 @@ public class Mon {
         String[] parts = input.split(" ");
         String command = parts[0].toLowerCase();
 
-        switch (command) {
-            case "list":
-                handleListCommand();
-                break;
-            case "mark":
-                handleMarkCommand(parts);
-                break;
-            case "unmark":
-                handleUnmarkCommand(parts);
-                break;
-            case "todo":
-                handleTodoCommand(input);
-                break;
-            case "deadline":
-                handleDeadlineCommand(input);
-                break;
-            case "event":
-                handleEventCommand(input);
-                break;
-            default:
-                break;
+        try {
+            switch (command) {
+                case "list":
+                    handleListCommand();
+                    break;
+                case "mark":
+                    handleMarkCommand(parts);
+                    break;
+                case "unmark":
+                    handleUnmarkCommand(parts);
+                    break;
+                case "todo":
+                    handleTodoCommand(input);
+                    break;
+                case "deadline":
+                    handleDeadlineCommand(input);
+                    break;
+                case "event":
+                    handleEventCommand(input);
+                    break;
+                default:
+                    break;
+            }
+        } catch (MonException e) {
+            System.out.println("    " + e.getMessage());
         }
     }
 
@@ -67,27 +71,47 @@ public class Mon {
                 "    OK, I've marked this task as not done yet:\n" + "    " + tasks.get(taskNumber - 1).toString());
     }
 
-    private static void handleTodoCommand(String input) {
-        String taskName = input.split(" ", 2)[1];
-        tasks.add(new Todo(taskName));
+    private static void handleTodoCommand(String input) throws MonException {
+        String[] parts = input.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw MonException.TodoException();
+        }
+        tasks.add(new Todo(parts[1]));
         System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
         System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    private static void handleDeadlineCommand(String input) {
-        String taskDescription = input.split(" ", 2)[1];
-        String[] parts = taskDescription.split(" /by ");
-        tasks.add(new Deadline(parts[0], parts[1]));
+    private static void handleDeadlineCommand(String input) throws MonException {
+        String[] parts = input.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw MonException.DeadlineException();
+        }
+        String[] deadlineParts = parts[1].split(" /by ");
+        if (deadlineParts.length < 2) {
+            throw MonException.DeadlineException();
+        }
+        tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
         System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
         System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    private static void handleEventCommand(String input) {
-        String taskDescription = input.split(" ", 2)[1];
-        String[] parts = taskDescription.split(" /from ", 2);
-        String eventName = parts[0];
-        String eventStartTime = parts[1].split(" /to ")[0];
-        String eventEndTime = parts[1].split(" /to ")[1];
+    private static void handleEventCommand(String input) throws MonException {
+        String[] parts = input.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw MonException.EventException();
+        }
+        String[] eventParts = parts[1].split(" /from ", 2);
+        if (eventParts.length < 2) {
+            throw MonException.EventException();
+        }
+        String eventName = eventParts[0];
+
+        String[] eventTimeParts = eventParts[1].split(" /to ");
+        if (eventTimeParts.length < 2) {
+            throw MonException.EventException();
+        }
+        String eventStartTime = eventTimeParts[0];
+        String eventEndTime = eventTimeParts[1];
         tasks.add(new Event(eventName, eventStartTime, eventEndTime));
         System.out.println("    Got it. I've added this task:\n" + "    " + tasks.get(tasks.size() - 1).toString());
         System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
