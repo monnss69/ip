@@ -2,9 +2,13 @@ public class Task {
     private String taskName;
     private Boolean status;
 
-    public Task(String taskname) {
+    public Task(String taskname, Boolean status) {
         this.taskName = taskname;
-        this.status = false;
+        this.status = status;
+    }
+
+    public Task(String taskname) {
+        this(taskname, false);
     }
 
     public String getTaskName() {
