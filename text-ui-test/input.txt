@@ -1,4 +1,13 @@
-todo hi
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+Todo x
+Todo x x
+Todo      
+Deadline y /by z
+Deadline /y by z
+Event T /from now /to now+1
+Events g
+Event g
 list
+mark 1
+mark
+unmark 2
+bye
