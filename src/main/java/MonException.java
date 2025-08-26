@@ -19,14 +19,16 @@ public class MonException extends Exception {
     public static MonException deadlineException() {
         return new MonException(
             "Unknown format for deadline command!" + NEWLINE +
-            INDENT + "Expected format: deadline <task_description> /by <date>"
+            INDENT + "Expected format: deadline <task_description> /by <yyyy-MM-dd>" + NEWLINE +
+            INDENT + "Example: deadline submit assignment /by 2023-12-31"
         );
     }
 
     public static MonException eventException() {
         return new MonException(
             "Unknown format for event command!" + NEWLINE +
-            INDENT + "Expected format: event <task_description> /from <start_time> /to <end_time>"
+            INDENT + "Expected format: event <task_description> /from <yyyy-MM-dd> /to <yyyy-MM-dd>" + NEWLINE +
+            INDENT + "Example: event team meeting /from 2023-12-01 /to 2023-12-01"
         );
     }
 
@@ -55,6 +57,22 @@ public class MonException extends Exception {
         return new MonException(
             "Unknown format for delete command!" + NEWLINE +
             INDENT + "Expected format: delete <task_number>"
+        );
+    }
+
+    public static MonException dateFormatException() {
+        return new MonException(
+            "Invalid date format!" + NEWLINE +
+            INDENT + "Expected format: yyyy-MM-dd (e.g., 2023-12-31)" + NEWLINE +
+            INDENT + "Please ensure the date is valid and follows the correct format."
+        );
+    }
+
+    public static MonException fileCorruptedException() {
+        return new MonException(
+            "Data file appears to be corrupted!" + NEWLINE +
+            INDENT + "Unable to parse task information from the file." + NEWLINE +
+            INDENT + "Please check the file format or restore from backup."
         );
     }
 
