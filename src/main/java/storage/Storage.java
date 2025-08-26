@@ -61,7 +61,6 @@ public class Storage {
                 loadedTasks.add(task);
             }
         } catch (Exception e) {
-            // Log the problematic line but continue processing
             System.out.println("Warning: Unable to parse line: " + line + " - " + e.getMessage());
         }
     }
