@@ -186,4 +186,23 @@ public class Mon {
         System.out.println(INDENT + TASK_DELETED_MESSAGE + "\n" + INDENT + removedTask.toString());
         System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
+
+    public static void convertStringToTask(String taskString) {
+        String[] parts = taskString.split(" \\| ", 2);
+        String taskType = parts[0];
+        switch (taskType) {
+            case "T":
+                tasks.add(Todo.toTodoTask(taskString));
+                break;
+            case "D":
+                tasks.add(Deadline.toDeadlineTask(taskString));
+                break;
+            case "E":
+                tasks.add(Event.toEventTask(taskString));
+                break;
+            default:
+                tasks.add(Task.toTask(taskString));
+                break;
+        }
+    }
 }

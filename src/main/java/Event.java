@@ -19,6 +19,12 @@ public class Event extends Task {
     public String getEventEndTime() {
         return eventEndTime;
     }
+    
+    public static Event toEventTask(String taskString) {
+        String[] parts = taskString.split(" \\| ", 4);
+        String[] timeParts = parts[3].split(" to ", 2);
+        return new Event(parts[2], parts[1].equals("1"), timeParts[0], timeParts[1]);
+    }
 
     @Override
     public String toString() {

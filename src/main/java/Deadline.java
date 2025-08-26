@@ -14,6 +14,11 @@ public class Deadline extends Task {
         return deadline;
     }
 
+    public static Deadline toDeadlineTask(String taskString) {
+        String[] parts = taskString.split(" \\| ", 4);
+        return new Deadline(parts[2], parts[1].equals("1"), parts[3]);
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + deadline + ")";

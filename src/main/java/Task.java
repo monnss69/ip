@@ -23,6 +23,11 @@ public class Task {
         this.status = status;
     }
 
+    public static Task toTask(String taskString) {
+        String[] parts = taskString.split(" \\| ");
+        return new Task(parts[2], parts[1].equals("1"));
+    }
+
     @Override
     public String toString() {
         return "[" + (status ? "X" : " ") + "] " + taskName;
