@@ -1,0 +1,48 @@
+package command;
+
+import task.Event;
+import task.TaskList;
+
+/**
+ * Command to add an event task.
+ */
+public class AddEventCommand extends Command {
+    private static final String INDENT = "    ";
+    private static final String TASK_ADDED_MESSAGE = "Got it. I've added this task:";
+    private static final String TASK_COUNT_PREFIX = "Now you have ";
+    private static final String TASK_COUNT_SUFFIX = " tasks in the list.";
+    
+    private final String description;
+    private final String from;
+    private final String to;
+    
+    public AddEventCommand(String description, String from, String to) {
+        this.description = description;
+        this.from = from;
+        this.to = to;
+    }
+    
+    @Override
+    public String execute(TaskList taskList, Object storage) throws Exception {
+        if (description == null || description.trim().isEmpty()) {
+            throw new Exception("Event description cannot be empty!");
+        }
+        if (from == null || from.trim().isEmpty()) {
+            throw new Exception("Event start time cannot be empty!");
+        }
+        if (to == null || to.trim().isEmpty()) {
+            throw new Exception("Event end time cannot be empty!");
+        }
+        
+        try {
+            // Add the task
+            taskList.addTask(new Event(description, from, to));
+            
+            return INDENT + TASK_ADDED_MESSAGE + "\n" + 
+                   INDENT + taskList.getTask(taskList.size() - 1).toString() + "\n" +
+                   INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX;
+        } catch (Exception e) {
+            throw new Exception("Invalid event format!");
+        }
+    }
+}

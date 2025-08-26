@@ -1,5 +1,8 @@
-D | 0 | do | Sep 3 2018
-E | 1 | do | Dec 1 2022 | Dec 2 2022
-D | 0 | atask | Dec 3 2022
+D | 1 | atask | Dec 3 2022
 E | 0 | xx | Sep 9 2022 | Sep 4 2023
 T | 0 | lsaikd
+T | 0 | test task
+D | 0 | new deadline | Dec 31 2024
+E | 0 | meeting | Dec 25 2024 | Dec 26 2024
+T | 0 | add
+E | 0 | from | Oct 20 2022 | Dec 1 2923
