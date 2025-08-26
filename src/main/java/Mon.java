@@ -3,6 +3,7 @@ import java.util.Scanner;
 import task.Deadline;
 import task.Event;
 import task.Task;
+import task.TaskList;
 import task.Todo;
 
 public class Mon {
@@ -13,11 +14,28 @@ public class Mon {
     private static final String MARKED_DONE_MESSAGE = "Nice! I've marked this task as done:";
     private static final String MARKED_NOT_DONE_MESSAGE = "OK, I've marked this task as not done yet:";
     private static final String TASK_DELETED_MESSAGE = "Noted. I've removed this task:";
-
     private static final String FILE_PATH = "data/mon.txt";
-    private static final Storage storage = new Storage(FILE_PATH);
-    private static final ArrayList<Task> tasks = new ArrayList<>();
+
+    private final Storage storage;
+    private TaskList taskList;
+
+    public Mon() {
+        this.storage = new Storage(FILE_PATH);
+        try {
+            ArrayList<Task> tasks = storage.loadTasks();
+            this.taskList = new TaskList(tasks);
+        } catch (Exception e) {
+            System.out.println(INDENT + "Error loading tasks: " + e.getMessage());
+            this.taskList = new TaskList();
+        }
+    }
+
     public static void main(String[] args) {
+        Mon mon = new Mon();
+        mon.run();
+    }
+
+    public void run() {
         System.out.println(INDENT + "Hello I'm Mon. What can I do for you?");
 
         Scanner scanner = new Scanner(System.in);
@@ -35,7 +53,7 @@ public class Mon {
         System.out.println(INDENT + "Mon: See you again!");
     }
 
-    private static void handleInput(String input) {
+    private void handleInput(String input) {
         // Parse the command from the input
         String[] parts = input.split(" ");
         String command = parts[0].toLowerCase();
@@ -66,19 +84,21 @@ public class Mon {
                 default:
                     throw MonException.unknownCommandException();
             }
+
+            storage.saveTasks(taskList.getTaskList());
         } catch (MonException e) {
             // Print any error messages with proper indentation
             System.out.println("    " + e.getMessage());
         }
     }
 
-    private static void handleListCommand() {
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(INDENT + (i + 1) + ". " + tasks.get(i).toString());
+    private void handleListCommand() {
+        for (int i = 0; i < taskList.size(); i++) {
+            System.out.println(INDENT + (i + 1) + ". " + taskList.getTask(i).toString());
         }
     }
 
-    private static void handleMarkCommand(String[] parts) throws MonException {
+    private void handleMarkCommand(String[] parts) throws MonException {
         if (parts.length < 2) {
             throw MonException.markException();
         }
@@ -86,16 +106,16 @@ public class Mon {
         // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
 
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw MonException.taskOutOfBoundsException();
         }
 
         // Mark the task as done and print
-        tasks.get(taskNumber - 1).setStatus(true);
-        System.out.println(INDENT + MARKED_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());
+        taskList.getTask(taskNumber - 1).setStatus(true);
+        System.out.println(INDENT + MARKED_DONE_MESSAGE + "\n" + INDENT + taskList.getTask(taskNumber - 1).toString());
     }
 
-    private static void handleUnmarkCommand(String[] parts) throws MonException {
+    private void handleUnmarkCommand(String[] parts) throws MonException {
         if (parts.length < 2) {
             throw MonException.markException();
         }
@@ -103,16 +123,17 @@ public class Mon {
         // Parse the task number from the command
         int taskNumber = Integer.parseInt(parts[1]);
 
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw MonException.taskOutOfBoundsException();
         }
 
         // Mark the task as not done and print
-        tasks.get(taskNumber - 1).setStatus(false);
-        System.out.println(INDENT + MARKED_NOT_DONE_MESSAGE + "\n" + INDENT + tasks.get(taskNumber - 1).toString());
+        taskList.getTask(taskNumber - 1).setStatus(false);
+        System.out.println(
+                INDENT + MARKED_NOT_DONE_MESSAGE + "\n" + INDENT + taskList.getTask(taskNumber - 1).toString());
     }
 
-    private static void handleTodoCommand(String input) throws MonException {
+    private void handleTodoCommand(String input) throws MonException {
         // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
@@ -120,12 +141,13 @@ public class Mon {
         }
 
         // Add the task and print
-        tasks.add(new Todo(parts[1]));
-        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
-        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
+        taskList.addTask(new Todo(parts[1]));
+        System.out.println(
+                INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + taskList.getTask(taskList.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX);
     }
 
-    private static void handleDeadlineCommand(String input) throws MonException {
+    private void handleDeadlineCommand(String input) throws MonException {
         // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
@@ -139,12 +161,17 @@ public class Mon {
         }
 
         // Add the task and print
-        tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
-        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
-        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
+        try {
+            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
+        } catch (Exception e) {
+            throw MonException.deadlineException();
+        }
+        System.out.println(
+                INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + taskList.getTask(taskList.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX);
     }
 
-    private static void handleEventCommand(String input) throws MonException {
+    private void handleEventCommand(String input) throws MonException {
         // Split the input to remove the command prefix
         String[] parts = input.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
@@ -168,12 +195,17 @@ public class Mon {
         String eventEndTime = eventTimeParts[1];
 
         // Add and print
-        tasks.add(new Event(eventName, eventStartTime, eventEndTime));
-        System.out.println(INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + tasks.get(tasks.size() - 1).toString());
-        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
+        try {
+            taskList.addTask(new Event(eventName, eventStartTime, eventEndTime));
+        } catch (Exception e) {
+            throw MonException.eventException();
+        }
+        System.out.println(
+                INDENT + TASK_ADDED_MESSAGE + "\n" + INDENT + taskList.getTask(taskList.size() - 1).toString());
+        System.out.println(INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX);
     }
 
-    public static void handleDeleteCommand(String[] parts) throws MonException {
+    private void handleDeleteCommand(String[] parts) throws MonException {
         // Split the input to remove the command prefix
         if (parts.length < 2) {
             throw MonException.unknownCommandException();
@@ -187,13 +219,14 @@ public class Mon {
             throw MonException.unknownCommandException();
         }
 
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw MonException.taskOutOfBoundsException();
         }
 
         // Remove the task and print
-        Task removedTask = tasks.remove(taskNumber - 1);
+        Task removedTask = taskList.getTask(taskNumber - 1);
+        taskList.removeTask(taskNumber - 1);
         System.out.println(INDENT + TASK_DELETED_MESSAGE + "\n" + INDENT + removedTask.toString());
-        System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
+        System.out.println(INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX);
     }
 }
