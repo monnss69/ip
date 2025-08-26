@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +13,8 @@ public class Mon {
     private static final String MARKED_NOT_DONE_MESSAGE = "OK, I've marked this task as not done yet:";
     private static final String TASK_DELETED_MESSAGE = "Noted. I've removed this task:";
 
-    private static final ArrayList<Task> tasks = new ArrayList<>();
+    private static final String FILE_PATH = "data/mon.txt";
+    private static final ArrayList<Task> tasks = initializeTasks();
 
     public static void main(String[] args) {
         System.out.println(INDENT + "Hello I'm Mon. What can I do for you?");
@@ -61,6 +65,8 @@ public class Mon {
                 default:
                     throw MonException.unknownCommandException();
             }
+
+            writeTasks();
         } catch (MonException e) {
             // Print any error messages with proper indentation
             System.out.println("    " + e.getMessage());
@@ -175,7 +181,12 @@ public class Mon {
         }
 
         // Parse the task number from the command
-        int taskNumber = Integer.parseInt(parts[1]);
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+            throw MonException.unknownCommandException();
+        }
 
         if (taskNumber < 1 || taskNumber > tasks.size()) {
             throw MonException.taskOutOfBoundsException();
@@ -187,22 +198,72 @@ public class Mon {
         System.out.println(INDENT + TASK_COUNT_PREFIX + tasks.size() + TASK_COUNT_SUFFIX);
     }
 
-    public static void convertStringToTask(String taskString) {
+    public static Task convertStringToTask(String taskString) {
         String[] parts = taskString.split(" \\| ", 2);
         String taskType = parts[0];
         switch (taskType) {
             case "T":
-                tasks.add(Todo.toTodoTask(taskString));
-                break;
+                return Todo.toTodoTask(taskString);
             case "D":
-                tasks.add(Deadline.toDeadlineTask(taskString));
-                break;
+                return Deadline.toDeadlineTask(taskString);
             case "E":
-                tasks.add(Event.toEventTask(taskString));
-                break;
+                return Event.toEventTask(taskString);
             default:
-                tasks.add(Task.toTask(taskString));
-                break;
+                return Task.toTask(taskString);
+        }
+    }
+
+    public static ArrayList<Task> initializeTasks() {
+        ArrayList<Task> loadedTasks = new ArrayList<>();
+        File file = new File(FILE_PATH);
+        
+        // Create directory if it doesn't exist
+        File directory = file.getParentFile();
+        if (directory != null && !directory.exists()) {
+            directory.mkdirs();
+        }
+        
+        try {
+            if (file.createNewFile()) {
+                return loadedTasks;
+            }
+        } catch (IOException e) {
+            System.out.println("OOPS! Error creating file " + file.getAbsolutePath() + ": " + e.getMessage());
+            return loadedTasks;
+        }
+
+        // File exists, so read from it
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    Task task = convertStringToTask(line);
+                    if (task != null) {
+                        loadedTasks.add(task);
+                    }
+                }
+            }
+            return loadedTasks;
+        } catch (Exception e) {
+            System.out.println("OOPS! Error reading file: " + e.getMessage());
+            return loadedTasks;
+        }
+    }
+
+    public static void writeTasks() {
+        // Create directory if it doesn't exist
+        File file = new File(FILE_PATH);
+        File directory = file.getParentFile();
+        if (directory != null && !directory.exists()) {
+            directory.mkdirs();
+        }
+        
+        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+            for (Task task : tasks) {
+                writer.write(task.toFileString() + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            System.out.println("OOPS! Error writing to file: " + e.getMessage());
         }
     }
 }

@@ -28,6 +28,10 @@ public class Task {
         return new Task(parts[2], parts[1].equals("1"));
     }
 
+    public String toFileString() {
+        return (status ? "1" : "0") + " | " + taskName;
+    }
+
     @Override
     public String toString() {
         return "[" + (status ? "X" : " ") + "] " + taskName;
