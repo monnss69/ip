@@ -1,5 +1,6 @@
 package command;
 
+import storage.Storage;
 import task.TaskList;
 
 /**
@@ -9,7 +10,7 @@ public class ListCommand extends Command {
     private static final String INDENT = "    ";
     
     @Override
-    public String execute(TaskList taskList, Object storage) throws Exception {
+    public String execute(TaskList taskList, Storage storage) throws Exception {
         StringBuilder result = new StringBuilder();
         
         for (int i = 0; i < taskList.size(); i++) {

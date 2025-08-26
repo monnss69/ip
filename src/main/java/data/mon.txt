@@ -6,3 +6,6 @@ D | 0 | new deadline | Dec 31 2024
 E | 0 | meeting | Dec 25 2024 | Dec 26 2024
 T | 0 | add
 E | 0 | from | Oct 20 2022 | Dec 1 2923
+T | 0 | test reorganized packages
+D | 0 | homework | Dec 31 2024
+E | 0 | meeting | Dec 25 2024 | Dec 26 2024

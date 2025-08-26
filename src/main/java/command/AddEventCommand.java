@@ -1,5 +1,6 @@
 package command;
 
+import storage.Storage;
 import task.Event;
 import task.TaskList;
 
@@ -23,7 +24,7 @@ public class AddEventCommand extends Command {
     }
     
     @Override
-    public String execute(TaskList taskList, Object storage) throws Exception {
+    public String execute(TaskList taskList, Storage storage) throws Exception {
         if (description == null || description.trim().isEmpty()) {
             throw new Exception("Event description cannot be empty!");
         }

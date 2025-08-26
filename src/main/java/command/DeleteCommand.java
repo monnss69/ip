@@ -1,5 +1,6 @@
 package command;
 
+import storage.Storage;
 import task.Task;
 import task.TaskList;
 
@@ -19,7 +20,7 @@ public class DeleteCommand extends Command {
     }
     
     @Override
-    public String execute(TaskList taskList, Object storage) throws Exception {
+    public String execute(TaskList taskList, Storage storage) throws Exception {
         if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw new Exception("Task number is out of bounds!");
         }

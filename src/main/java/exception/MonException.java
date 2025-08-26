@@ -1,3 +1,5 @@
+package exception;
+
 public class MonException extends Exception {
     private static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
