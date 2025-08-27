@@ -9,9 +9,9 @@ import mon.task.TaskList;
  */
 public class AddEventCommand extends Command {
     private static final String INDENT = "    ";
-    private static final String TASK_ADDED_MESSAGE = "Got it. I've added this task:";
-    private static final String TASK_COUNT_PREFIX = "Now you have ";
-    private static final String TASK_COUNT_SUFFIX = " tasks in the list.";
+    private static final String MESSAGE_TASK_ADDED = "Got it. I've added this task:";
+    private static final String MESSAGE_TASK_COUNT_PREFIX = "Now you have ";
+    private static final String MESSAGE_TASK_COUNT_SUFFIX = " tasks in the list.";
     
     private final String description;
     private final String from;
@@ -39,9 +39,9 @@ public class AddEventCommand extends Command {
             // Add the task
             taskList.addTask(new Event(description, from, to));
             
-            return INDENT + TASK_ADDED_MESSAGE + "\n" + 
+            return INDENT + MESSAGE_TASK_ADDED + "\n" + 
                    INDENT + taskList.getTask(taskList.size() - 1).toString() + "\n" +
-                   INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX;
+                   INDENT + MESSAGE_TASK_COUNT_PREFIX + taskList.size() + MESSAGE_TASK_COUNT_SUFFIX;
         } catch (Exception e) {
             throw new Exception("Invalid event format!");
         }
