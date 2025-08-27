@@ -12,6 +12,11 @@ public class MarkCommand extends Command {
     
     private final int taskNumber;
     
+    /**
+     * Creates a new MarkCommand to mark the specified task as done.
+     * 
+     * @param taskNumber the number of the task to mark (1-indexed)
+     */
     public MarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }

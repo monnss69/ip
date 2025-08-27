@@ -4,10 +4,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a task that occurs during a specific time period.
+ */
 public class Event extends Task {
     private LocalDate startTime;
     private LocalDate endTime;
 
+    /**
+     * Creates a new event task with the specified name, status, start time, and end time.
+     * 
+     * @param taskName the name of the task
+     * @param status the completion status of the task
+     * @param startTime the start date in yyyy-MM-dd format
+     * @param endTime the end date in yyyy-MM-dd format
+     * @throws IllegalArgumentException if the date format is invalid
+     */
     public Event(String taskName, boolean status, String startTime, String endTime) {
         super(taskName, status);
         try {
@@ -18,18 +30,42 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Creates a new incomplete event task with the specified name, start time, and end time.
+     * 
+     * @param taskName the name of the task
+     * @param startTime the start date in yyyy-MM-dd format
+     * @param endTime the end date in yyyy-MM-dd format
+     */
     public Event(String taskName, String startTime, String endTime) {
         this(taskName, false, startTime, endTime);
     }
 
+    /**
+     * Returns the start date of this event.
+     * 
+     * @return the start date
+     */
     public LocalDate getStartTime() {
         return startTime;
     }
 
+    /**
+     * Returns the end date of this event.
+     * 
+     * @return the end date
+     */
     public LocalDate getEndTime() {
         return endTime;
     }
 
+    /**
+     * Creates an event task from a string representation.
+     * 
+     * @param taskString the string representation of the event task
+     * @return the event task object
+     * @throws IllegalArgumentException if the task format is invalid
+     */
     public static Event toEventTask(String taskString) {
         try {
             String[] parts = taskString.split(" \\| ", 5);

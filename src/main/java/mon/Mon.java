@@ -10,6 +10,9 @@ import mon.task.Task;
 import mon.task.TaskList;
 import mon.ui.Ui;
 
+/**
+ * Main class for the Mon task manager application.
+ */
 public class Mon {
     private static final String FILE_PATH = "data/mon.txt";
 
@@ -17,6 +20,9 @@ public class Mon {
     private final TaskList taskList;
     private final Ui ui;
 
+    /**
+     * Creates a new Mon application instance and initializes components.
+     */
     public Mon() {
         this.ui = new Ui();
         this.storage = new Storage(FILE_PATH);
@@ -31,11 +37,19 @@ public class Mon {
         this.taskList = tempTaskList;
     }
 
+    /**
+     * Main entry point of the application.
+     * 
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         Mon mon = new Mon();
         mon.run();
     }
 
+    /**
+     * Runs the main application loop.
+     */
     public void run() {
         ui.showWelcome();
 
@@ -49,6 +63,12 @@ public class Mon {
         ui.close();
     }
 
+    /**
+     * Handles a single line of user input.
+     * 
+     * @param input the user input to handle
+     * @return true if the application should exit, false otherwise
+     */
     private boolean handleInput(String input) {
         try {
             Command command = Parser.parse(input);

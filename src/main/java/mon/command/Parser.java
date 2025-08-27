@@ -8,8 +8,8 @@ public class Parser {
     /**
      * Parses the given input string and returns the appropriate command.
      * 
-     * @param input The user input string
-     * @return The command to execute
+     * @param input the user input string
+     * @return the command to execute
      * @throws Exception if the input cannot be parsed
      */
     public static Command parse(String input) throws Exception {

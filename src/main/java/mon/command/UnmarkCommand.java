@@ -12,6 +12,11 @@ public class UnmarkCommand extends Command {
     
     private final int taskNumber;
     
+    /**
+     * Creates a new UnmarkCommand to mark the specified task as not done.
+     * 
+     * @param taskNumber the number of the task to unmark (1-indexed)
+     */
     public UnmarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }

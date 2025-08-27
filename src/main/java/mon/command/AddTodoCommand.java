@@ -15,6 +15,11 @@ public class AddTodoCommand extends Command {
     
     private final String description;
     
+    /**
+     * Creates a new AddTodoCommand with the specified description.
+     * 
+     * @param description the description of the simple task
+     */
     public AddTodoCommand(String description) {
         this.description = description;
     }

@@ -12,13 +12,27 @@ import mon.task.Event;
 import mon.task.Task;
 import mon.task.Todo;
 
+/**
+ * Handles loading and saving tasks to and from file storage.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Creates a new Storage instance with the specified file path.
+     * 
+     * @param filePath the path to the file where tasks will be stored
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the storage file.
+     * 
+     * @return the list of loaded tasks
+     * @throws MonException if there's an error loading from file
+     */
     public ArrayList<Task> loadTasks() throws MonException {
         ArrayList<Task> loadedTasks = new ArrayList<>();
         File file = new File(filePath);
@@ -39,6 +53,13 @@ public class Storage {
         return readTasksFromFile(file);
     }
 
+    /**
+     * Reads tasks from the specified file.
+     * 
+     * @param file the file to read tasks from
+     * @return the list of tasks read from the file
+     * @throws MonException if there's an error reading the file
+     */
     private ArrayList<Task> readTasksFromFile(File file) throws MonException {
         ArrayList<Task> loadedTasks = new ArrayList<>();
 
@@ -55,6 +76,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a line from the file and adds the resulting task to the list.
+     * 
+     * @param loadedTasks the list to add the parsed task to
+     * @param line the line to parse
+     */
     private void parseAndAddTask(ArrayList<Task> loadedTasks, String line) {
         try {
             Task task = convertStringToTask(line);
@@ -66,6 +93,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the list of tasks to the storage file.
+     * 
+     * @param tasks the list of tasks to save
+     * @throws MonException if there's an error writing to file
+     */
     public void saveTasks(ArrayList<Task> tasks) throws MonException {
         File file = new File(filePath);
 
@@ -81,6 +114,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Converts a string representation to a Task object.
+     * 
+     * @param taskString the string representation of a task
+     * @return the Task object
+     * @throws IllegalArgumentException if the task format is invalid
+     */
     private Task convertStringToTask(String taskString) {
         String[] parts = taskString.split(" \\| ", 2);
         if (parts.length < 1) {
@@ -96,6 +136,11 @@ public class Storage {
         };
     }
 
+    /**
+     * Creates the parent directory if it doesn't exist.
+     * 
+     * @param file the file whose parent directory should be created
+     */
     private void createDirectoryIfNotExists(File file) {
         File directory = file.getParentFile();
         if (directory != null && !directory.exists()) {
