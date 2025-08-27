@@ -8,14 +8,14 @@ import mon.task.TaskList;
  */
 public class UnmarkCommand extends Command {
     private static final String INDENT = "    ";
-    private static final String MARKED_NOT_DONE_MESSAGE = "OK, I've marked this task as not done yet:";
+    private static final String MESSAGE_MARKED_NOT_DONE = "OK, I've marked this task as not done yet:";
     
     private final int taskNumber;
     
     /**
-     * Creates a new UnmarkCommand to mark the specified task as not done.
+     * Constructs an UnmarkCommand with the specified task number.
      * 
-     * @param taskNumber the number of the task to unmark (1-indexed)
+     * @param taskNumber The 1-based index of the task to mark as not done
      */
     public UnmarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
@@ -30,7 +30,7 @@ public class UnmarkCommand extends Command {
         // Mark the task as not done
         taskList.getTask(taskNumber - 1).setStatus(false);
         
-        return INDENT + MARKED_NOT_DONE_MESSAGE + "\n" + 
+        return INDENT + MESSAGE_MARKED_NOT_DONE + "\n" + 
                INDENT + taskList.getTask(taskNumber - 1).toString();
     }
 }

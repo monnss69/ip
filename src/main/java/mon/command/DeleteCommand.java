@@ -9,9 +9,9 @@ import mon.task.TaskList;
  */
 public class DeleteCommand extends Command {
     private static final String INDENT = "    ";
-    private static final String TASK_DELETED_MESSAGE = "Noted. I've removed this task:";
-    private static final String TASK_COUNT_PREFIX = "Now you have ";
-    private static final String TASK_COUNT_SUFFIX = " tasks in the list.";
+    private static final String MESSAGE_TASK_DELETED = "Noted. I've removed this task:";
+    private static final String MESSAGE_TASK_COUNT_PREFIX = "Now you have ";
+    private static final String MESSAGE_TASK_COUNT_SUFFIX = " tasks in the list.";
     
     private final int taskNumber;
     
@@ -34,8 +34,8 @@ public class DeleteCommand extends Command {
         Task removedTask = taskList.getTask(taskNumber - 1);
         taskList.removeTask(taskNumber - 1);
         
-        return INDENT + TASK_DELETED_MESSAGE + "\n" + 
+        return INDENT + MESSAGE_TASK_DELETED + "\n" + 
                INDENT + removedTask.toString() + "\n" +
-               INDENT + TASK_COUNT_PREFIX + taskList.size() + TASK_COUNT_SUFFIX;
+               INDENT + MESSAGE_TASK_COUNT_PREFIX + taskList.size() + MESSAGE_TASK_COUNT_SUFFIX;
     }
 }

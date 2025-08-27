@@ -5,7 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Represents a task with a name and completion status.
+ * Represents a basic task with a name and completion status.
+ * This is the base class for all task types in the Mon application.
  */
 public class Task {
     private String taskName;
@@ -16,36 +17,36 @@ public class Task {
     private static final DateTimeFormatter STANDARD_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
-     * Creates a new task with the specified name and status.
+     * Constructs a task with the specified name and status.
      * 
-     * @param taskname the name of the task
-     * @param status the completion status of the task
+     * @param taskName The name of the task
+     * @param status The completion status of the task
      */
-    public Task(String taskname, boolean status) {
-        this.taskName = taskname;
+    public Task(String taskName, boolean status) {
+        this.taskName = taskName;
         this.status = status;
     }
 
     /**
-     * Creates a new incomplete task with the specified name.
+     * Constructs a task with the specified name and default status (incomplete).
      * 
-     * @param taskname the name of the task
+     * @param taskName The name of the task
      */
-    public Task(String taskname) {
-        this(taskname, false);
+    public Task(String taskName) {
+        this(taskName, false);
     }
 
     /**
-     * Returns the name of this task.
+     * Gets the name of the task.
      * 
-     * @return the task name
+     * @return The task name
      */
     public String getTaskName() {
         return this.taskName;
     }
 
     /**
-     * Returns the completion status of this task.
+     * Gets the completion status of the task.
      * 
      * @return true if the task is completed, false otherwise
      */
@@ -54,20 +55,19 @@ public class Task {
     }
 
     /**
-     * Sets the completion status of this task.
+     * Sets the completion status of the task.
      * 
-     * @param status the new completion status
+     * @param status true to mark as completed, false to mark as incomplete
      */
     public void setStatus(boolean status) {
         this.status = status;
     }
 
-
     /**
      * Converts a date from file format (MMM d yyyy) to standard format (yyyy-MM-dd).
      * 
-     * @param fileFormatDate the date in file format
-     * @return the date in standard format
+     * @param fileFormatDate The date string in file format (e.g., "Dec 3 2017")
+     * @return The date string in standard format (e.g., "2017-12-03")
      * @throws IllegalArgumentException if the date format is invalid
      */
     public static String convertFileFormatToStandardDate(String fileFormatDate) {
@@ -83,8 +83,8 @@ public class Task {
     /**
      * Converts a date from standard format (yyyy-MM-dd) to file format (MMM d yyyy).
      * 
-     * @param standardFormatDate the date in standard format
-     * @return the date in file format
+     * @param standardFormatDate The date string in standard format (e.g., "2017-12-03")
+     * @return The date string in file format (e.g., "Dec 3 2017")
      * @throws IllegalArgumentException if the date format is invalid
      */
     public static String convertStandardToFileFormatDate(String standardFormatDate) {
@@ -100,8 +100,8 @@ public class Task {
     /**
      * Creates a Task object from a string representation.
      * 
-     * @param taskString the string representation of a task
-     * @return the Task object
+     * @param taskString The string representation of the task
+     * @return A new Task object created from the string
      */
     public static Task toTask(String taskString) {
         String[] parts = taskString.split(" \\| ");
@@ -109,9 +109,9 @@ public class Task {
     }
 
     /**
-     * Returns the string representation of this task for file storage.
+     * Converts the task to its string representation for file storage.
      * 
-     * @return the file string representation
+     * @return A string representation suitable for saving to file
      */
     public String toFileString() {
         return (status ? "1" : "0") + " | " + taskName;

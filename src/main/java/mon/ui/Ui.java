@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class Ui {
     private static final String INDENT = "    ";
-    private static final String WELCOME_MESSAGE = "Hello I'm Mon. What can I do for you?";
+    private static final String MESSAGE_WELCOME = "Hello I'm Mon. What can I do for you?";
 
     private final Scanner scanner;
 
@@ -22,7 +22,7 @@ public class Ui {
      * Shows the welcome message to the user.
      */
     public void showWelcome() {
-        System.out.println(INDENT + WELCOME_MESSAGE);
+        System.out.println(INDENT + MESSAGE_WELCOME);
     }
 
     /**
