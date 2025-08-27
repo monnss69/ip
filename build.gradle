@@ -28,7 +28,7 @@ test {
 }
 
 application {
-    mainClass.set("Mon")
+    mainClass.set("mon.Mon")
 }
 
 shadowJar {

@@ -1,1 +1,3 @@
 T | 0 | test task
+T | 0 | sample task
+T | 0 | eat
