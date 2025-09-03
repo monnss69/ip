@@ -87,4 +87,11 @@ public class Mon {
             return false;
         }
     }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Mon heard: " + input;
+    }
 }
