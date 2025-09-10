@@ -13,11 +13,9 @@ public class Parser {
      * @throws Exception if the input cannot be parsed
      */
     public static Command parse(String input) throws Exception {
-        boolean isInputNull = input == null;
-        boolean isInputEmpty = input != null && input.trim().isEmpty();
-        boolean isInputInvalid = isInputNull || isInputEmpty;
+        assert input != null : "Input string cannot be null";
         
-        if (isInputInvalid) {
+        if (input.trim().isEmpty()) {
             throw new Exception("Empty command!");
         }
 

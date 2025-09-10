@@ -1,6 +1,7 @@
 package mon.command;
 
 import mon.storage.Storage;
+import mon.task.Task;
 import mon.task.TaskList;
 
 /**
@@ -23,6 +24,9 @@ public class UnmarkCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
+        assert taskList != null : "TaskList cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         boolean isTaskNumberTooSmall = taskNumber < 1;
         boolean isTaskNumberTooLarge = taskNumber > taskList.size();
         boolean isTaskNumberOutOfBounds = isTaskNumberTooSmall || isTaskNumberTooLarge;
@@ -32,9 +36,12 @@ public class UnmarkCommand extends Command {
         }
         
         // Mark the task as not done
-        taskList.getTask(taskNumber - 1).setStatus(false);
+        Task task = taskList.getTask(taskNumber - 1);
+        assert task != null : "Retrieved task cannot be null";
+        task.setStatus(false);
+        assert !task.getStatus() : "Task should be marked as not done";
         
         return INDENT + MESSAGE_MARKED_NOT_DONE + "\n" + 
-               INDENT + taskList.getTask(taskNumber - 1).toString();
+               INDENT + task.toString();
     }
 }
