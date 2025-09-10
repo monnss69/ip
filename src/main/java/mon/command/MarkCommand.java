@@ -23,7 +23,11 @@ public class MarkCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
-        if (taskNumber < 1 || taskNumber > taskList.size()) {
+        boolean isTaskNumberTooSmall = taskNumber < 1;
+        boolean isTaskNumberTooLarge = taskNumber > taskList.size();
+        boolean isTaskNumberOutOfBounds = isTaskNumberTooSmall || isTaskNumberTooLarge;
+        
+        if (isTaskNumberOutOfBounds) {
             throw new Exception("Task number is out of bounds!");
         }
         

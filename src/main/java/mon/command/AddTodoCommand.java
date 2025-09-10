@@ -26,7 +26,11 @@ public class AddTodoCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
-        if (description == null || description.trim().isEmpty()) {
+        boolean isDescriptionNull = description == null;
+        boolean isDescriptionEmpty = description != null && description.trim().isEmpty();
+        boolean isDescriptionInvalid = isDescriptionNull || isDescriptionEmpty;
+        
+        if (isDescriptionInvalid) {
             throw new Exception("Todo description cannot be empty!");
         }
         

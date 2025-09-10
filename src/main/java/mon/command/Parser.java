@@ -13,7 +13,11 @@ public class Parser {
      * @throws Exception if the input cannot be parsed
      */
     public static Command parse(String input) throws Exception {
-        if (input == null || input.trim().isEmpty()) {
+        boolean isInputNull = input == null;
+        boolean isInputEmpty = input != null && input.trim().isEmpty();
+        boolean isInputInvalid = isInputNull || isInputEmpty;
+        
+        if (isInputInvalid) {
             throw new Exception("Empty command!");
         }
 
@@ -65,7 +69,11 @@ public class Parser {
 
             case "todo":
                 String[] todoParts = input.split(" ", 2);
-                if (todoParts.length < 2 || todoParts[1].trim().isEmpty()) {
+                boolean hasTooFewTodoParts = todoParts.length < 2;
+                boolean isTodoDescriptionEmpty = todoParts.length >= 2 && todoParts[1].trim().isEmpty();
+                boolean isTodoFormatInvalid = hasTooFewTodoParts || isTodoDescriptionEmpty;
+                
+                if (isTodoFormatInvalid) {
                     throw new Exception("Unknown format for todo command!\n" +
                             "    Expected format: todo <task_description>");
                 }
@@ -73,7 +81,11 @@ public class Parser {
 
             case "deadline":
                 String[] deadlineParts = input.split(" ", 2);
-                if (deadlineParts.length < 2 || deadlineParts[1].trim().isEmpty()) {
+                boolean hasTooFewDeadlineParts = deadlineParts.length < 2;
+                boolean isDeadlineDescriptionEmpty = deadlineParts.length >= 2 && deadlineParts[1].trim().isEmpty();
+                boolean isDeadlineFormatInvalid = hasTooFewDeadlineParts || isDeadlineDescriptionEmpty;
+                
+                if (isDeadlineFormatInvalid) {
                     throw new Exception("Unknown format for deadline command!\n" +
                             "    Expected format: deadline <task_description> /by <date>");
                 }
@@ -87,7 +99,11 @@ public class Parser {
 
             case "event":
                 String[] eventParts = input.split(" ", 2);
-                if (eventParts.length < 2 || eventParts[1].trim().isEmpty()) {
+                boolean hasTooFewEventParts = eventParts.length < 2;
+                boolean isEventDescriptionEmpty = eventParts.length >= 2 && eventParts[1].trim().isEmpty();
+                boolean isEventFormatInvalid = hasTooFewEventParts || isEventDescriptionEmpty;
+                
+                if (isEventFormatInvalid) {
                     throw new Exception("Unknown format for event command!\n" +
                             "    Expected format: event <task_description> /from <start> /to <end>");
                 }

@@ -55,7 +55,14 @@ public class Mon {
 
         boolean shouldExit = false;
         
-        while (ui.hasNextLine() && !shouldExit) {
+        while (true) {
+            boolean hasMoreInput = ui.hasNextLine();
+            boolean shouldContinue = hasMoreInput && !shouldExit;
+            
+            if (!shouldContinue) {
+                break;
+            }
+            
             String input = ui.readCommand();
             shouldExit = handleInput(input);
         }
