@@ -32,13 +32,27 @@ public class AddEventCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
-        if (description == null || description.trim().isEmpty()) {
+        boolean isDescriptionNull = description == null;
+        boolean isDescriptionEmpty = description != null && description.trim().isEmpty();
+        boolean isDescriptionInvalid = isDescriptionNull || isDescriptionEmpty;
+        
+        if (isDescriptionInvalid) {
             throw new Exception("Event description cannot be empty!");
         }
-        if (from == null || from.trim().isEmpty()) {
+        
+        boolean isFromNull = from == null;
+        boolean isFromEmpty = from != null && from.trim().isEmpty();
+        boolean isFromInvalid = isFromNull || isFromEmpty;
+        
+        if (isFromInvalid) {
             throw new Exception("Event start time cannot be empty!");
         }
-        if (to == null || to.trim().isEmpty()) {
+        
+        boolean isToNull = to == null;
+        boolean isToEmpty = to != null && to.trim().isEmpty();
+        boolean isToInvalid = isToNull || isToEmpty;
+        
+        if (isToInvalid) {
             throw new Exception("Event end time cannot be empty!");
         }
         

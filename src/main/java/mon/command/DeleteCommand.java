@@ -29,7 +29,11 @@ public class DeleteCommand extends Command {
         assert taskList != null : "TaskList cannot be null";
         assert storage != null : "Storage cannot be null";
         
-        if (taskNumber < 1 || taskNumber > taskList.size()) {
+        boolean isTaskNumberTooSmall = taskNumber < 1;
+        boolean isTaskNumberTooLarge = taskNumber > taskList.size();
+        boolean isTaskNumberOutOfBounds = isTaskNumberTooSmall || isTaskNumberTooLarge;
+        
+        if (isTaskNumberOutOfBounds) {
             throw new Exception("Task number is out of bounds!");
         }
         

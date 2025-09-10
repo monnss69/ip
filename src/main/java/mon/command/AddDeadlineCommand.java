@@ -29,10 +29,19 @@ public class AddDeadlineCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
-        if (description == null || description.trim().isEmpty()) {
+        boolean isDescriptionNull = description == null;
+        boolean isDescriptionEmpty = description != null && description.trim().isEmpty();
+        boolean isDescriptionInvalid = isDescriptionNull || isDescriptionEmpty;
+        
+        if (isDescriptionInvalid) {
             throw new Exception("Deadline description cannot be empty!");
         }
-        if (by == null || by.trim().isEmpty()) {
+        
+        boolean isByNull = by == null;
+        boolean isByEmpty = by != null && by.trim().isEmpty();
+        boolean isByInvalid = isByNull || isByEmpty;
+        
+        if (isByInvalid) {
             throw new Exception("Deadline date cannot be empty!");
         }
         

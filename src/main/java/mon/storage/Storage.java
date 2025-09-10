@@ -151,7 +151,11 @@ public class Storage {
      */
     private void createDirectoryIfNotExists(File file) {
         File directory = file.getParentFile();
-        if (directory != null && !directory.exists()) {
+        boolean isDirectoryNotNull = directory != null;
+        boolean doesDirectoryNotExist = directory != null && !directory.exists();
+        boolean shouldCreateDirectory = isDirectoryNotNull && doesDirectoryNotExist;
+        
+        if (shouldCreateDirectory) {
             directory.mkdirs();
         }
     }
