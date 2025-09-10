@@ -26,12 +26,16 @@ public class DeleteCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
+        assert taskList != null : "TaskList cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw new Exception("Task number is out of bounds!");
         }
         
         // Remove the task
         Task removedTask = taskList.getTask(taskNumber - 1);
+        assert removedTask != null : "Retrieved task cannot be null";
         taskList.removeTask(taskNumber - 1);
         
         return INDENT + MESSAGE_TASK_DELETED + "\n" + 

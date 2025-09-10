@@ -23,6 +23,8 @@ public class Task {
      * @param status The completion status of the task
      */
     public Task(String taskName, boolean status) {
+        assert taskName != null : "Task name cannot be null";
+        assert !taskName.trim().isEmpty() : "Task name cannot be empty";
         this.taskName = taskName;
         this.status = status;
     }
@@ -104,7 +106,9 @@ public class Task {
      * @return A new Task object created from the string
      */
     public static Task toTask(String taskString) {
+        assert taskString != null : "Task string cannot be null";
         String[] parts = taskString.split(" \\| ");
+        assert parts.length >= 3 : "Invalid task string format: " + taskString;
         return new Task(parts[2], parts[1].equals("1"));
     }
 
