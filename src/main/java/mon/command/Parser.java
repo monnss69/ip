@@ -32,40 +32,13 @@ public class Parser {
                 return new ListCommand();
 
             case "mark":
-                if (parts.length < 2) {
-                    throw new Exception("Unknown format for mark command!\n" +
-                            "    Expected format: mark <task_number>");
-                }
-                try {
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    return new MarkCommand(taskNumber);
-                } catch (NumberFormatException e) {
-                    throw new Exception("Invalid task number for mark command!");
-                }
+                return parseMarkCommand(parts);
 
             case "unmark":
-                if (parts.length < 2) {
-                    throw new Exception("Unknown format for unmark command!\n" +
-                            "    Expected format: unmark <task_number>");
-                }
-                try {
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    return new UnmarkCommand(taskNumber);
-                } catch (NumberFormatException e) {
-                    throw new Exception("Invalid task number for unmark command!");
-                }
+                return parseUnmarkCommand(parts);
 
             case "delete":
-                if (parts.length < 2) {
-                    throw new Exception("Unknown format for delete command!\n" +
-                            "    Expected format: delete <task_number>");
-                }
-                try {
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    return new DeleteCommand(taskNumber);
-                } catch (NumberFormatException e) {
-                    throw new Exception("Invalid task number for delete command!");
-                }
+                return parseDeleteCommand(parts);
 
             case "todo":
                 String[] todoParts = input.split(" ", 2);
@@ -134,6 +107,69 @@ public class Parser {
 
             default:
                 throw new Exception("I don't know what that means :-(");
+        }
+    }
+
+    /**
+     * Parses the mark command with the given parts.
+     * 
+     * @param parts the command parts
+     * @return the MarkCommand
+     * @throws Exception if parsing fails
+     */
+    private static Command parseMarkCommand(String[] parts) throws Exception {
+        if (parts.length < 2) {
+            throw new Exception("Unknown format for mark command!\n" +
+                    "    Expected format: mark <task_number>");
+        }
+        
+        try {
+            int taskNumber = Integer.parseInt(parts[1]);
+            return new MarkCommand(taskNumber);
+        } catch (NumberFormatException e) {
+            throw new Exception("Invalid task number for mark command!");
+        }
+    }
+
+    /**
+     * Parses the unmark command with the given parts.
+     * 
+     * @param parts the command parts
+     * @return the UnmarkCommand
+     * @throws Exception if parsing fails
+     */
+    private static Command parseUnmarkCommand(String[] parts) throws Exception {
+        if (parts.length < 2) {
+            throw new Exception("Unknown format for unmark command!\n" +
+                    "    Expected format: unmark <task_number>");
+        }
+        
+        try {
+            int taskNumber = Integer.parseInt(parts[1]);
+            return new UnmarkCommand(taskNumber);
+        } catch (NumberFormatException e) {
+            throw new Exception("Invalid task number for unmark command!");
+        }
+    }
+
+    /**
+     * Parses the delete command with the given parts.
+     * 
+     * @param parts the command parts
+     * @return the DeleteCommand
+     * @throws Exception if parsing fails
+     */
+    private static Command parseDeleteCommand(String[] parts) throws Exception {
+        if (parts.length < 2) {
+            throw new Exception("Unknown format for delete command!\n" +
+                    "    Expected format: delete <task_number>");
+        }
+        
+        try {
+            int taskNumber = Integer.parseInt(parts[1]);
+            return new DeleteCommand(taskNumber);
+        } catch (NumberFormatException e) {
+            throw new Exception("Invalid task number for delete command!");
         }
     }
 }
