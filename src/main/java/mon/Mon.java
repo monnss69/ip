@@ -29,12 +29,18 @@ public class Mon {
         TaskList tempTaskList;
         try {
             ArrayList<Task> tasks = storage.loadTasks();
+            assert tasks != null : "Loaded tasks list cannot be null";
             tempTaskList = new TaskList(tasks);
         } catch (MonException e) {
             ui.showError("Error loading tasks: " + e.getMessage());
             tempTaskList = new TaskList();
         }
         this.taskList = tempTaskList;
+        
+        // Critical assertions for initialized components
+        assert this.ui != null : "UI component must be initialized";
+        assert this.storage != null : "Storage component must be initialized"; 
+        assert this.taskList != null : "TaskList component must be initialized";
     }
 
     /**
@@ -70,9 +76,14 @@ public class Mon {
      * @return true if the application should exit, false otherwise
      */
     private boolean handleInput(String input) {
+        assert input != null : "Input cannot be null";
+        
         try {
             Command command = Parser.parse(input);
+            assert command != null : "Parser returned null command";
+
             String response = command.execute(taskList, storage);
+            assert response != null : "Command response cannot be null";
             
             ui.showMessage(response);
             

@@ -24,6 +24,8 @@ public class Storage {
      * @param filePath the path to the file where tasks will be stored
      */
     public Storage(String filePath) {
+        assert filePath != null : "File path cannot be null";
+        assert !filePath.trim().isEmpty() : "File path cannot be empty";
         this.filePath = filePath;
     }
 
@@ -100,6 +102,8 @@ public class Storage {
      * @throws MonException if there's an error writing to file
      */
     public void saveTasks(ArrayList<Task> tasks) throws MonException {
+        assert tasks != null : "Tasks list cannot be null";
+        
         File file = new File(filePath);
 
         // Create directory if it doesn't exist
@@ -107,6 +111,7 @@ public class Storage {
 
         try (FileWriter writer = new FileWriter(filePath)) {
             for (Task task : tasks) {
+                assert task != null : "Task in list cannot be null";
                 writer.write(task.toFileString() + System.lineSeparator());
             }
         } catch (IOException e) {
@@ -122,6 +127,9 @@ public class Storage {
      * @throws IllegalArgumentException if the task format is invalid
      */
     private Task convertStringToTask(String taskString) {
+        assert taskString != null : "Task string cannot be null";
+        assert !taskString.trim().isEmpty() : "Task string cannot be empty";
+        
         String[] parts = taskString.split(" \\| ", 2);
         if (parts.length < 1) {
             throw new IllegalArgumentException("Invalid task format: " + taskString);

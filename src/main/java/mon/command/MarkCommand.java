@@ -1,6 +1,7 @@
 package mon.command;
 
 import mon.storage.Storage;
+import mon.task.Task;
 import mon.task.TaskList;
 
 /**
@@ -23,14 +24,19 @@ public class MarkCommand extends Command {
     
     @Override
     public String execute(TaskList taskList, Storage storage) throws Exception {
+        assert taskList != null : "TaskList cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (taskNumber < 1 || taskNumber > taskList.size()) {
             throw new Exception("Task number is out of bounds!");
         }
         
         // Mark the task as done
-        taskList.getTask(taskNumber - 1).setStatus(true);
+        Task task = taskList.getTask(taskNumber - 1);
+        assert task != null : "Retrieved task cannot be null";
+        task.setStatus(true);
         
         return INDENT + MESSAGE_MARKED_DONE + "\n" + 
-               INDENT + taskList.getTask(taskNumber - 1).toString();
+               INDENT + task.toString();
     }
 }
