@@ -3,6 +3,7 @@ package mon.storage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -56,20 +57,45 @@ public class Storage {
     }
 
     /**
+     * Loads tasks that need to be reminded (due within 7 days).
+     * 
+     * @return the list of tasks that need reminders
+     * @throws MonException if there's an error loading from file
+     */
+    public ArrayList<Task> loadReminderTasks() throws MonException {
+        File file = new File(filePath);
+
+        // Create directory if it doesn't exist
+        createDirectoryIfNotExists(file);
+
+        // If file doesn't exist, return empty list
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+
+        return readTasksFromFile(file, true);
+    }
+
+    private ArrayList<Task> readTasksFromFile(File file) throws MonException {
+        return readTasksFromFile(file, false);
+    }
+
+    /**
      * Reads tasks from the specified file.
      * 
      * @param file the file to read tasks from
+     * @param isReminderFile indicates if the tasks needed to be reminded
      * @return the list of tasks read from the file
      * @throws MonException if there's an error reading the file
      */
-    private ArrayList<Task> readTasksFromFile(File file) throws MonException {
+    private ArrayList<Task> readTasksFromFile(File file, boolean isReminderFile) throws MonException {
         ArrayList<Task> loadedTasks = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (!line.isEmpty()) {
-                    parseAndAddTask(loadedTasks, line);
+                    parseAndAddTask(loadedTasks, line, isReminderFile);
                 }
             }
             return loadedTasks;
@@ -84,12 +110,27 @@ public class Storage {
      * @param loadedTasks the list to add the parsed task to
      * @param line the line to parse
      */
-    private void parseAndAddTask(ArrayList<Task> loadedTasks, String line) {
+    private void parseAndAddTask(ArrayList<Task> loadedTasks, String line, boolean isReminderFile) {
         try {
             Task task = convertStringToTask(line);
-            if (task != null) {
-                loadedTasks.add(task);
+            if (task == null) {
+                return;
             }
+
+            if (isReminderFile) {
+                // Check if task is due within 7 days
+                if (task instanceof Deadline deadline) {
+                    long daysUntilDeadline = deadline.getDeadline().toEpochDay() - LocalDate.now().toEpochDay();
+                    if (daysUntilDeadline <= 7) {
+                        loadedTasks.add(task);
+                    }
+                } else {
+                    loadedTasks.add(task);
+                }
+                return;
+            }
+
+            loadedTasks.add(task);
         } catch (Exception e) {
             System.out.println("Warning: Unable to parse line: " + line + " - " + e.getMessage());
         }

@@ -41,6 +41,9 @@ public class Mon {
         assert this.ui != null : "UI component must be initialized";
         assert this.storage != null : "Storage component must be initialized"; 
         assert this.taskList != null : "TaskList component must be initialized";
+        
+        // Check for reminders on startup
+        showReminders();
     }
 
     /**
@@ -111,5 +114,30 @@ public class Mon {
      */
     public String getResponse(String input) {
         return "Mon heard: " + input;
+    }
+
+    /**
+     * Checks for tasks that need reminders and displays them to the user.
+     */
+    private void showReminders() {
+        try {
+            ArrayList<Task> reminderTasks = storage.loadReminderTasks();
+            
+            if (!reminderTasks.isEmpty()) {
+                ui.showMessage("🔔 REMINDERS - Tasks due within 7 days:");
+                ui.showMessage("─".repeat(50));
+                
+                for (int i = 0; i < reminderTasks.size(); i++) {
+                    Task task = reminderTasks.get(i);
+                    ui.showMessage((i + 1) + ". " + task.toString());
+                }
+                
+                ui.showMessage("─".repeat(50));
+                ui.showMessage("Don't forget to complete these tasks!\n");
+            }
+        } catch (MonException e) {
+            // Don't show error for reminders to avoid disrupting the user experience
+            // Just silently continue if reminders can't be loaded
+        }
     }
 }
