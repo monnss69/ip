@@ -113,7 +113,26 @@ public class Mon {
      * Generates a response for the user's chat message.
      */
     public String getResponse(String input) {
-        return "Mon heard: " + input;
+        if (input == null) {
+            return "Error: Input cannot be null";
+        }
+        
+        try {
+            Command command = Parser.parse(input);
+            assert command != null : "Parser returned null command";
+
+            String response = command.execute(taskList, storage);
+            assert response != null : "Command response cannot be null";
+            
+            // Save tasks after every command that modifies the task list
+            if (!command.isExit()) {
+                storage.saveTasks(taskList.getTaskList());
+            }
+            
+            return response;
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
     /**
