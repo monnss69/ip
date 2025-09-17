@@ -1,7 +1,5 @@
 # Mon User Guide
 
-![Mon Screenshot](https://via.placeholder.com/600x400/007bff/ffffff?text=Mon+Chat+Interface)
-
 Mon is your personal task manager with a modern, chat-like interface. Manage your todos, deadlines, and events effortlessly through natural conversation with Mon, your AI assistant.
 
 ## Quick Start
